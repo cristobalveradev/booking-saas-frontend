@@ -7,7 +7,7 @@ const AuthContext = createContext(undefined);
 export function AuthProvider({ children }) {
   const storedUser = localStorage.getItem('user');
   const [accessToken, setAccessToken] = useState(null);
-  const [loading, setLoading] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [authReady, setAuthReady] = useState(false)
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
  }, [])
 
   const initAuth = async () => {
-    setLoading(true)
     try{
       const res = await fetch("http://localhost:5000/auth/refresh-token", {
         method:"POST",
@@ -30,12 +29,10 @@ export function AuthProvider({ children }) {
       });
       
       if(!res.ok) {
-        return ;
-        
+        return; 
       }
       
       const data = await res.json();
-      
       setAccessToken(data.accessToken)
       setAuthReady(true)
     } catch(err){
@@ -79,6 +76,7 @@ export function AuthProvider({ children }) {
         localStorage.setItem("user",JSON.stringify(data.user))
         //localStorage.setItem("token",data.token)
         setAccessToken(data.token)
+        setAuthReady(true)
       }
 
       return data

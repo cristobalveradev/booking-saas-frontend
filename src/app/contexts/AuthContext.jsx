@@ -90,8 +90,17 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const res = await fetch("http://localhost:5000/auth/logout", {
+      method:"POST",
+      credentials:"include"
+    })
+    const data = await res.json();
+    console.log(data.message) 
+
     setUser(null);
+    setAuthReady(false)
+    setAccessToken(null)
     localStorage.removeItem('user');
   };
 

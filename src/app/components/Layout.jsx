@@ -4,19 +4,20 @@ import { Button } from './ui/button';
 import { Calendar, Scissors, LogOut } from 'lucide-react';
 
 export function Layout({ children }) {
-  const { user, logout, loading } = useAuth();
+  
+  const { user, logout, loading, authReady } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
-
+  console.log(authReady)
   const isActive = (path) => location.pathname === path;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {user && 
+      {authReady && 
         <header className="bg-white border-b">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -25,7 +26,7 @@ export function Layout({ children }) {
                 <span className="text-xl">Salon Booking</span>
               </div>
 
-              {user && (
+              {authReady && (
                 <nav className="flex items-center gap-6">
                   <Link
                     to="/services"

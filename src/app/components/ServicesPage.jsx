@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Trash2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { apiFetch, createService, deleteService } from '../api/apiClient';
+import { apiFetch, createService, deleteService, getServices } from '../api/apiClient';
 import { UserContext } from '../contexts/UserContexts';
 
 export function ServicesPage() {
@@ -18,7 +18,7 @@ export function ServicesPage() {
   
   useEffect(() => {
     if(!authReady) return ;
-    getServices()
+    fetchServices()
   }, [authReady]);
 
   const handleCreateService = async (e) => {
@@ -54,25 +54,17 @@ export function ServicesPage() {
 
   };
 
-  const getServices = async () => {
+  const  fetchServices =async () => {
     
     
-    const res = await apiFetch(`http://localhost:5000/auth/getServices/${user.id}`, {
-      method:"GET",
-      headers:{
-        "Content-Type": "application/json",
-        //"Authorization": "Bearer " + localStorage.getItem("token")
-      }
-    }, accessToken);
-
-    const data = await res.json();
-
-    if(!res.ok){
+    const services = await getServices(user.id, accessToken);
+    console.log(services)
+    setServices(services)
+    if(!services){
       // Handle HTTP errors (404, 500, etc.)
       throw new Error(res.message || 'Something went wrong');
     }
 
-    setServices(data.services)
   }
 
   return (

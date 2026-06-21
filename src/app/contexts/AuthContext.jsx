@@ -2,7 +2,8 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 // crear contexto 
 const AuthContext = createContext(undefined);
-
+const url = "https://booking-saas-backend.onrender.com/"
+const debugUrl = "http://localhost:5000/"
 // crear provider
 export function AuthProvider({ children }) {
   const storedUser = localStorage.getItem('user');
@@ -19,11 +20,13 @@ export function AuthProvider({ children }) {
 
  useEffect(()=> {
   initAuth()
+  console.log(accessToken)
+  console.log(authReady)
  }, [])
 
   const initAuth = async () => {
     try{
-      const res = await fetch("http://localhost:5000/auth/refresh-token", {
+      const res = await fetch(url + "auth/refresh-token", {
         method:"POST",
         credentials:"include"
       });
@@ -43,8 +46,10 @@ export function AuthProvider({ children }) {
   }
 
   const register = async (name, email, password) => {
-    const res = await fetch("http://localhost:5000/auth/register", {
-      method:"POST",
+    try{
+
+      const res = await fetch(url + "auth/register", {
+        method:"POST",
       headers:{
         "Content-Type": "application/json"
       },
@@ -54,15 +59,18 @@ export function AuthProvider({ children }) {
         name:name
       })
     })
-
+    
     const data = await res.json()
     
     return data
+  } catch(error){
+    console.error(error)
+  }
   };
 
   const login = async (email, password) => {
     try{
-      const res = await fetch("http://localhost:5000/auth/login",{
+      const res = await fetch(url+"auth/login",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
         credentials: "include", // 🔥 CLAVE
@@ -91,7 +99,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    const res = await fetch("http://localhost:5000/auth/logout", {
+    const res = await fetch(url + "auth/logout", {
       method:"POST",
       credentials:"include"
     })
@@ -102,6 +110,7 @@ export function AuthProvider({ children }) {
     setAuthReady(false)
     setAccessToken(null)
     localStorage.removeItem('user');
+    return data
   };
 
   return (

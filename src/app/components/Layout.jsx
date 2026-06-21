@@ -7,8 +7,11 @@ export function Layout({ children }) {
   const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const handleLogout = () => {
-    logout();
+  
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    const res = await logout();
+    console.log(res)
     navigate('/');
   };
 

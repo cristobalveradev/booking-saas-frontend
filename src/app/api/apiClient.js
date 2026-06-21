@@ -1,6 +1,8 @@
 //import { useAuth } from "../contexts/AuthContext";
 
-const url = "http://localhost:5000"
+
+const url = "https://booking-saas-backend.onrender.com"
+
 export const setAccessToken = (token) => {
     accessToken = token;
 };
@@ -21,7 +23,7 @@ export const apiFetch = async (url, options = {}, accessToken) => {
     const response = await makeRequest();
 
     if(response.status === 401){
-        const refreshResponse = await fetch("http://localhost:5000/auth/refresh-token", {
+        const refreshResponse = await fetch(url + "/auth/refresh-token", {
             method:"POST",
             credentials: "include"
         })
@@ -87,7 +89,7 @@ export const createService = async (service, accessToken) => {
 }
 
 export const getServices = async (userId, accessToken) => {
-    const url = `http://localhost:5000/auth/getServices/${userId}`
+    const formatedUrl = `${url}/auth/getServices/${userId}`
     const options = {
       method:"GET",
       headers:{
@@ -95,7 +97,7 @@ export const getServices = async (userId, accessToken) => {
         //"Authorization": "Bearer " + localStorage.getItem("token")
       }
     };
-    const res = await apiFetch(url,options, accessToken)
+    const res = await apiFetch(formatedUrl,options, accessToken)
     
     const data = await res.json();
     
@@ -109,7 +111,7 @@ export const getServices = async (userId, accessToken) => {
 }
 
 export const createAppointment = async (appointment, accessToken) => {
-    const url = `http://localhost:5000/auth/createAppointment`
+    const url = `${url}/auth/createAppointment`
     const options = {
         method:"POST",
         headers: {"Content-Type": "application/json"},
@@ -123,7 +125,7 @@ export const createAppointment = async (appointment, accessToken) => {
 }
 
 export const getAppointments = async (userId, accessToken) =>{
-     const url = `http://localhost:5000/auth/getApointmentsById/${userId}`
+     const url = `${url}/auth/getApointmentsById/${userId}`
     const options = {
       method:"GET",
       headers:{
@@ -148,7 +150,7 @@ export const getAppointments = async (userId, accessToken) =>{
 } 
 
 export const deleteAppointment = async (appointmentId, accessToken) => {
-    const url = `http://localhost:5000/auth/deleteAppointment/${appointmentId}`
+    const url = `${url}/auth/deleteAppointment/${appointmentId}`
     const options = {
         method:"DELETE",  
         headers:{
